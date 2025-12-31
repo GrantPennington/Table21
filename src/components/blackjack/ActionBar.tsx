@@ -34,10 +34,9 @@ export function ActionBar() {
   ];
 
   return (
-    <div className="flex flex-col items-center gap-4 p-6 bg-gray-800/50 rounded-lg border border-gray-700">
-      <div className="text-lg font-semibold text-white">Your Move</div>
-
-      <div className="flex flex-wrap gap-3 justify-center">
+    <div className="flex flex-col items-center gap-3 lg:gap-4 xl:gap-5">
+      {/* Action Buttons - Single Row */}
+      <div className="flex gap-2 lg:gap-3 xl:gap-4 items-center flex-wrap justify-center">
         {actionButtons.map(({ action: actionType, label, shortcut, color }) => {
           const isLegal = legalActions.includes(actionType);
 
@@ -47,20 +46,18 @@ export function ActionBar() {
               onClick={() => handleAction(actionType)}
               disabled={!isLegal || actionLoading}
               className={`
-                relative px-6 py-3 font-bold text-white rounded-lg transition-all
+                px-4 py-2 lg:px-5 lg:py-2.5 xl:px-6 xl:py-3 font-semibold text-white text-sm lg:text-base xl:text-lg rounded transition-colors
                 ${isLegal && !actionLoading ? color : 'bg-gray-700 opacity-50 cursor-not-allowed'}
-                ${isLegal && !actionLoading ? 'hover:scale-105 active:scale-95 shadow-lg' : ''}
               `}
             >
-              {label}
-              <span className="ml-2 text-xs opacity-75">({shortcut})</span>
+              {label} <span className="text-xs lg:text-sm xl:text-base opacity-75">({shortcut})</span>
             </button>
           );
         })}
       </div>
 
       {actionLoading && (
-        <div className="text-sm text-gray-400 animate-pulse">Processing...</div>
+        <div className="text-xs lg:text-sm xl:text-base text-gray-400 animate-pulse">Processing...</div>
       )}
     </div>
   );

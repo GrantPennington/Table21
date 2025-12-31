@@ -10,10 +10,10 @@ type PlayerHandsProps = {
 
 export function PlayerHands({ hands, activeHandIndex }: PlayerHandsProps) {
   return (
-    <div className="flex flex-col items-center gap-6">
-      <div className="text-lg sm:text-xl font-semibold text-white">You</div>
+    <div className="flex flex-col items-center gap-4 sm:gap-6 lg:gap-8 xl:gap-10">
+      <div className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold text-white">You</div>
 
-      <div className="flex flex-wrap gap-6 justify-center">
+      <div className="flex flex-wrap gap-4 sm:gap-6 lg:gap-8 xl:gap-10 justify-center">
         {hands.map((hand, handIndex) => {
           const isActive = handIndex === activeHandIndex && hand.status === 'ACTIVE';
           const statusColor = {
@@ -27,20 +27,20 @@ export function PlayerHands({ hands, activeHandIndex }: PlayerHandsProps) {
           return (
             <div
               key={`hand-${handIndex}`}
-              className={`relative flex flex-col items-center gap-3 p-4 rounded-lg border-4 transition-all ${
+              className={`relative flex flex-col items-center gap-2 sm:gap-3 lg:gap-4 xl:gap-5 p-3 sm:p-4 lg:p-6 xl:p-8 rounded-lg border-4 transition-all ${
                 isActive ? `${statusColor} bg-white/10` : 'border-transparent'
               }`}
             >
               {/* Hand label for splits */}
               {hands.length > 1 && (
-                <div className="text-sm font-medium text-white">
+                <div className="text-sm sm:text-base lg:text-lg xl:text-xl font-medium text-white">
                   Hand {handIndex + 1}
                   {isActive && <span className="ml-2 text-yellow-300">←</span>}
                 </div>
               )}
 
               {/* Cards */}
-              <div className="flex gap-2 sm:gap-3">
+              <div className="flex gap-2 sm:gap-3 lg:gap-4 xl:gap-5">
                 {hand.cards.map((card, cardIndex) => (
                   <Card
                     key={`hand-${handIndex}-card-${cardIndex}`}
@@ -51,10 +51,10 @@ export function PlayerHands({ hands, activeHandIndex }: PlayerHandsProps) {
               </div>
 
               {/* Total */}
-              <div className="text-base sm:text-lg font-semibold text-white">
+              <div className="text-base sm:text-lg lg:text-xl xl:text-2xl font-semibold text-white">
                 {hand.total}
                 {hand.soft && hand.total <= 21 && (
-                  <span className="ml-1 text-sm text-yellow-300">(soft)</span>
+                  <span className="ml-1 text-sm lg:text-base xl:text-lg text-yellow-300">(soft)</span>
                 )}
                 {hand.status === 'BLACKJACK' && (
                   <span className="ml-2 text-green-300">Blackjack!</span>
@@ -65,7 +65,7 @@ export function PlayerHands({ hands, activeHandIndex }: PlayerHandsProps) {
               </div>
 
               {/* Bet */}
-              <div className="text-sm text-gray-300">
+              <div className="text-sm sm:text-base lg:text-lg xl:text-xl text-gray-300">
                 Bet: ${(hand.betCents / 100).toFixed(2)}
               </div>
             </div>

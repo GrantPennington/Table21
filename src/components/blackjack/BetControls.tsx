@@ -5,11 +5,11 @@ import { useBlackjackStore } from '@/store/blackjackStore';
 const CHIP_VALUES = [100, 500, 1000, 2500, 5000];
 
 const CHIP_COLORS: Record<number, string> = {
-  100: 'bg-white border-gray-400',
-  500: 'bg-red-500 border-red-700',
-  1000: 'bg-blue-500 border-blue-700',
-  2500: 'bg-green-500 border-green-700',
-  5000: 'bg-black border-gray-600',
+  100: 'bg-white border-gray-400 text-gray-900',
+  500: 'bg-red-500 border-red-700 text-white',
+  1000: 'bg-blue-500 border-blue-700 text-white',
+  2500: 'bg-green-500 border-green-700 text-white',
+  5000: 'bg-black border-gray-600 text-white',
 };
 
 export function BetControls() {
@@ -42,26 +42,21 @@ export function BetControls() {
   };
 
   return (
-    <div className="flex flex-col items-center gap-4 p-6 bg-gray-800/50 rounded-lg border border-gray-700">
-      {/* Bankroll */}
-      <div className="text-xl font-bold text-green-400">
-        Bankroll: ${(bankrollCents / 100).toFixed(2)}
-      </div>
-
+    <div className="flex flex-col items-center gap-3 lg:gap-4 xl:gap-5">
       {/* Round Over Message */}
       {roundState?.phase === 'SETTLEMENT' && (
-        <div className="text-lg font-semibold text-yellow-300">
+        <div className="text-base lg:text-lg xl:text-xl font-semibold text-yellow-300">
           Place your bet for the next hand
         </div>
       )}
 
-      {/* Current Bet Display */}
-      <div className="text-lg text-white">
-        Current Bet: ${(currentBetCents / 100).toFixed(2)}
+      {/* Current Bet */}
+      <div className="text-lg lg:text-xl xl:text-2xl text-white font-semibold">
+        Bet: ${(currentBetCents / 100).toFixed(2)}
       </div>
 
-      {/* Chips */}
-      <div className="flex flex-wrap gap-3 justify-center">
+      {/* Chips - Single Row */}
+      <div className="flex gap-2 lg:gap-3 xl:gap-4 items-center justify-center">
         {CHIP_VALUES.map((value) => {
           const disabled = !canBet || value > bankrollCents;
           return (
@@ -70,7 +65,7 @@ export function BetControls() {
               onClick={() => addChip(value)}
               disabled={disabled}
               className={`
-                relative w-16 h-16 rounded-full border-4 font-bold text-sm
+                relative w-14 h-14 lg:w-16 lg:h-16 xl:w-20 xl:h-20 rounded-full border-4 font-bold text-xs lg:text-sm xl:text-base
                 transition-all duration-200 transform
                 ${CHIP_COLORS[value]}
                 ${
@@ -80,46 +75,38 @@ export function BetControls() {
                 }
               `}
             >
-              <div className="absolute inset-0 flex items-center justify-center text-white drop-shadow-md">
-                ${value / 100}
-              </div>
+              ${value / 100}
             </button>
           );
         })}
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex gap-3 flex-wrap justify-center">
+      {/* Action Buttons - Single Row */}
+      <div className="flex gap-2 lg:gap-3 xl:gap-4 items-center">
         <button
           onClick={clearBet}
           disabled={!canBet || currentBetCents === 0}
-          className="px-6 py-2 bg-gray-600 hover:bg-gray-500 disabled:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors"
+          className="px-4 py-2 lg:px-5 lg:py-2.5 xl:px-6 xl:py-3 bg-gray-600 hover:bg-gray-500 disabled:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm lg:text-base xl:text-lg font-semibold rounded transition-colors"
         >
           Clear
         </button>
 
-        <button
-          onClick={handleRebet}
-          disabled={!canRebet}
-          className="px-6 py-2 bg-yellow-600 hover:bg-yellow-500 disabled:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold rounded-lg transition-colors"
-          title="Rebet (R)"
-        >
-          Rebet ${(lastBetCents / 100).toFixed(2)}
-        </button>
+        {canRebet && (
+          <button
+            onClick={handleRebet}
+            className="px-4 py-2 lg:px-5 lg:py-2.5 xl:px-6 xl:py-3 bg-yellow-600 hover:bg-yellow-500 text-white text-sm lg:text-base xl:text-lg font-semibold rounded transition-colors"
+          >
+            Rebet ${(lastBetCents / 100).toFixed(2)}
+          </button>
+        )}
 
         <button
           onClick={handleDeal}
           disabled={!canDeal}
-          className="px-8 py-3 bg-green-600 hover:bg-green-500 disabled:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold text-lg rounded-lg transition-colors shadow-lg"
-          title="Deal (Space)"
+          className="px-6 py-2 lg:px-7 lg:py-2.5 xl:px-8 xl:py-3 bg-green-600 hover:bg-green-500 disabled:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm lg:text-base xl:text-lg font-bold rounded transition-colors shadow-lg"
         >
           {roundLoading ? 'Dealing...' : 'Deal'}
         </button>
-      </div>
-
-      {/* Bet limits hint */}
-      <div className="text-xs text-gray-400">
-        Min: $1.00 | Max: $100.00
       </div>
     </div>
   );

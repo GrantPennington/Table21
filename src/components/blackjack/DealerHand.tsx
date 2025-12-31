@@ -9,15 +9,15 @@ type DealerHandProps = {
 
 export function DealerHand({ dealer }: DealerHandProps) {
   return (
-    <div className="flex flex-col items-center gap-4">
-      <div className="text-lg sm:text-xl font-semibold text-white">
+    <div className="flex flex-col items-center gap-3 sm:gap-4 lg:gap-6 xl:gap-8">
+      <div className="text-lg sm:text-xl lg:text-2xl xl:text-3xl font-semibold text-white">
         Dealer
         {dealer.holeRevealed && dealer.total !== null && (
           <span className="ml-2 text-yellow-300">({dealer.total})</span>
         )}
       </div>
 
-      <div className="flex gap-2 sm:gap-3">
+      <div className="flex gap-2 sm:gap-3 lg:gap-4 xl:gap-5">
         {dealer.cards.map((card, index) => {
           // Hide the hole card (second card) if not revealed
           const hideCard = index === 1 && !dealer.holeRevealed;
