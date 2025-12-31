@@ -32,12 +32,16 @@ export function DealerHand({ dealer }: DealerHandProps) {
         {dealer.cards.map((card, index) => {
           // Hide the hole card (second card) if not revealed
           const hideCard = index === 1 && !dealer.holeRevealed;
+          // Casino-style dealing: dealer gets cards at 0.3s, 0.9s (alternating with player)
+          const dealDelay = index === 0 ? 0.3 : 0.9;
+          // Use card data in key to force remount on new deals
+          const uniqueKey = `dealer-${card.rank}${card.suit}-${index}`;
           return (
-            <div key={`dealer-${index}`} className={getStackingClass(index)}>
+            <div key={uniqueKey} className={getStackingClass(index)}>
               <Card
                 card={card}
                 hidden={hideCard}
-                delay={index * 0.1}
+                delay={dealDelay}
               />
             </div>
           );

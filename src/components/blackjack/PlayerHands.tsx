@@ -52,11 +52,26 @@ export function PlayerHands({ hands, activeHandIndex }: PlayerHandsProps) {
                     return '-ml-12 sm:-ml-14 lg:-ml-16 xl:-ml-20';
                   };
 
+                  // Casino-style dealing sequence for initial two cards
+                  // Hit cards (3+) use minimal delay
+                  let dealDelay = 0;
+                  if (cardIndex === 0) {
+                    dealDelay = 0; // First card
+                  } else if (cardIndex === 1) {
+                    dealDelay = 0.6; // Second card in initial deal
+                  } else {
+                    // Hit cards appear quickly
+                    dealDelay = 0.1;
+                  }
+
+                  // Use card data in key to force remount on new deals
+                  const uniqueKey = `hand-${handIndex}-${card.rank}${card.suit}-${cardIndex}`;
+
                   return (
-                    <div key={`hand-${handIndex}-card-${cardIndex}`} className={getStackingClass()}>
+                    <div key={uniqueKey} className={getStackingClass()}>
                       <Card
                         card={card}
-                        delay={cardIndex * 0.1 + handIndex * 0.05}
+                        delay={dealDelay}
                       />
                     </div>
                   );
