@@ -3,10 +3,16 @@ import { cookies } from 'next/headers';
 import { createGameSessionToken, verifyGameSessionToken } from '@/lib/identity/cookies';
 import { Shoe, createShoe, shuffleShoe } from '@/lib/engine/shoe';
 import { RoundState, Rules, DEFAULT_RULES } from '@/lib/types';
+import { getOrCreatePlayer, updatePlayerBankroll } from '@/lib/db';
 
 export const GAME_SESSION_COOKIE = 'game_session';
 
 const DEFAULT_BANKROLL_CENTS = parseInt(process.env.DEFAULT_BANKROLL_CENTS || '100000', 10);
+
+// Check if database is configured
+const isDatabaseEnabled = (): boolean => {
+  return !!process.env.DATABASE_URL;
+};
 const SESSION_TTL_MS = 60 * 60 * 1000; // 1 hour
 
 export type UIPrefs = {
@@ -70,12 +76,23 @@ export async function getOrCreateGameSession(playerId: string): Promise<GameSess
   const sessionId = randomUUID();
   const shoe = shuffleShoe(createShoe(DEFAULT_RULES.numDecks));
 
+  // Load bankroll from database if available
+  let bankrollCents = DEFAULT_BANKROLL_CENTS;
+  if (isDatabaseEnabled()) {
+    try {
+      const player = await getOrCreatePlayer(playerId);
+      bankrollCents = player.bankrollCents;
+    } catch (error) {
+      console.error('Failed to load player from database:', error);
+    }
+  }
+
   const session: GameSession = {
     sessionId,
     playerId,
     shoe,
     roundState: null,
-    bankrollCents: DEFAULT_BANKROLL_CENTS,
+    bankrollCents,
     rules: DEFAULT_RULES,
     uiPrefs: {
       soundEnabled: true,
@@ -112,6 +129,19 @@ export function getGameSession(sessionId: string): GameSession | null {
 export function updateGameSession(session: GameSession): void {
   session.updatedAt = Date.now();
   sessions.set(session.sessionId, session);
+}
+
+/**
+ * Sync session bankroll to database
+ */
+export async function syncBankrollToDb(session: GameSession): Promise<void> {
+  if (!isDatabaseEnabled()) return;
+
+  try {
+    await updatePlayerBankroll(session.playerId, session.bankrollCents);
+  } catch (error) {
+    console.error('Failed to sync bankroll to database:', error);
+  }
 }
 
 /**

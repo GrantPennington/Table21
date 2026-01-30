@@ -1,4 +1,4 @@
-import { GameSession, updateGameSession } from './sessionStore';
+import { GameSession, updateGameSession, syncBankrollToDb } from './sessionStore';
 import { drawCards, shuffleShoe, shouldReshuffle, createShoe } from '@/lib/engine/shoe';
 import {
   calculateHandTotal,
@@ -10,6 +10,7 @@ import { getLegalActions } from '@/lib/engine/rules';
 import { playDealerHand } from '@/lib/engine/dealer';
 import { settleAllHands } from '@/lib/engine/settle';
 import { RoundState, Action, Card, PlayerHand } from '@/lib/types';
+import { recordHand, updatePlayerStats } from '@/lib/db';
 
 /**
  * Deal a new round
@@ -343,7 +344,41 @@ function handleSurrender(
   session.roundState = roundState;
   updateGameSession(session);
 
+  // Persist to database (async, fire-and-forget)
+  persistSurrender(session, roundState, hand).catch((err) =>
+    console.error('Failed to persist surrender:', err)
+  );
+
   return roundState;
+}
+
+/**
+ * Persist surrender to database
+ */
+async function persistSurrender(
+  session: GameSession,
+  roundState: RoundState,
+  hand: PlayerHand
+): Promise<void> {
+  await syncBankrollToDb(session);
+
+  const halfBet = Math.floor(hand.betCents / 2);
+
+  await recordHand({
+    playerId: session.playerId,
+    betCents: hand.betCents,
+    netResultCents: -halfBet,
+    result: 'SURRENDER',
+    playerCards: hand.cards,
+    dealerCards: roundState.dealer.cards,
+    playerTotal: hand.total,
+    dealerTotal: 0, // Dealer cards not revealed on surrender
+    wasBlackjack: false,
+    wasDouble: false,
+    wasSplit: false,
+  });
+
+  await updatePlayerStats(session.playerId, hand.betCents, -halfBet, false);
 }
 
 /**
@@ -437,5 +472,56 @@ function finalizeDealerTurn(session: GameSession, roundState: RoundState): Round
   session.roundState = roundState;
   updateGameSession(session);
 
+  // Persist to database (async, fire-and-forget)
+  persistSettlement(session, roundState).catch((err) =>
+    console.error('Failed to persist settlement:', err)
+  );
+
   return roundState;
+}
+
+/**
+ * Persist settlement data to database
+ */
+async function persistSettlement(
+  session: GameSession,
+  roundState: RoundState
+): Promise<void> {
+  const outcome = roundState.outcome;
+  if (!outcome) return;
+
+  // Sync bankroll
+  await syncBankrollToDb(session);
+
+  // Record each hand in history
+  const dealerTotal = roundState.dealer.total ?? 0;
+  const hasSplit = roundState.playerHands.length > 1;
+
+  for (let i = 0; i < outcome.results.length; i++) {
+    const result = outcome.results[i];
+    const hand = roundState.playerHands[i];
+    const isWin = result.result === 'WIN' || result.result === 'BJ';
+
+    await recordHand({
+      playerId: session.playerId,
+      betCents: hand.betCents,
+      netResultCents: result.netPayoutCents,
+      result: result.result,
+      playerCards: hand.cards,
+      dealerCards: roundState.dealer.cards,
+      playerTotal: hand.total,
+      dealerTotal,
+      wasBlackjack: result.result === 'BJ',
+      wasDouble: hand.cards.length === 3 && hand.betCents > roundState.baseBetCents,
+      wasSplit: hasSplit,
+    });
+
+    // Update player stats
+    await updatePlayerStats(
+      session.playerId,
+      hand.betCents,
+      result.netPayoutCents,
+      isWin
+    );
+  }
 }

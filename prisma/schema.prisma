@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Player {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Current state
+  bankrollCents Int @default(100000)
+
+  // Stats
+  handsPlayed  Int @default(0)
+  handsWon     Int @default(0)
+  totalWagered Int @default(0) // in cents
+  biggestWin   Int @default(0) // in cents
+
+  // Relations
+  handHistory HandHistory[]
+
+  @@index([createdAt])
+}
+
+model HandHistory {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+
+  // Player relation
+  playerId String
+  player   Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  // Hand details
+  betCents       Int
+  netResultCents Int // positive = win, negative = loss, 0 = push
+  result         String // WIN, LOSS, PUSH, BJ, SURRENDER
+
+  // Cards (stored as JSON)
+  playerCards String // JSON array of cards
+  dealerCards String // JSON array of cards
+  playerTotal Int
+  dealerTotal Int
+
+  // Metadata
+  wasBlackjack Boolean @default(false)
+  wasDouble    Boolean @default(false)
+  wasSplit     Boolean @default(false)
+
+  @@index([playerId, createdAt(sort: Desc)])
+}

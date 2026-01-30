@@ -319,14 +319,50 @@ All shortcuts only work when the action is legal and no request is in progress.
 - Refresh recovery (loads identity + round state on mount)
 - Responsive design (desktop + mobile)
 
-### Phase E - Persistence (V1)
+### Phase E ✅ - Persistence (V1)
 - Prisma + Neon Postgres
-- Bankroll + stats per player
-- Hand history
+- Bankroll persisted per player
+- Stats: hands played, hands won, biggest win, total wagered
+- Hand history (last 50 hands per player)
+- Graceful fallback when database is not configured
 
 ### Phase F - Leaderboards
 - Leaderboard entries
 - Recompute job
+
+---
+
+## Database Setup (Neon Postgres)
+
+The game works without a database (in-memory only), but to persist player data across sessions:
+
+### 1. Create a Neon Database
+
+1. Go to [console.neon.tech](https://console.neon.tech)
+2. Create a new project (free tier available)
+3. Copy the connection string from the dashboard
+
+### 2. Configure Environment
+
+Add to `.env.local`:
+```bash
+DATABASE_URL=postgresql://USER:PASSWORD@HOST/DATABASE?sslmode=require
+```
+
+### 3. Run Migrations
+
+```bash
+npx prisma migrate dev --name init
+```
+
+### 4. Verify
+
+The app will now persist:
+- Player bankroll across sessions
+- Game statistics (hands played, win rate, biggest win)
+- Hand history (last 50 hands)
+
+---
 
 ## License
 

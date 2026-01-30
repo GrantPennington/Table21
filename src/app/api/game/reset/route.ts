@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getOrCreatePlayerId } from '@/lib/identity';
 import { getOrCreateGameSession, updateGameSession } from '@/lib/game';
 import { createShoe, shuffleShoe } from '@/lib/engine/shoe';
+import { resetPlayer } from '@/lib/db';
 
 export async function POST() {
   try {
@@ -14,6 +15,15 @@ export async function POST() {
     session.roundState = null;
     session.shoe = shuffleShoe(createShoe(session.rules.numDecks));
     updateGameSession(session);
+
+    // Reset player in database if configured
+    if (process.env.DATABASE_URL) {
+      try {
+        await resetPlayer(playerId);
+      } catch (error) {
+        console.error('Failed to reset player in database:', error);
+      }
+    }
 
     return NextResponse.json({
       bankrollCents: session.bankrollCents,
