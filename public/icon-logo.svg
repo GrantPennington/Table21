@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="DOWNCARD icon">
+  <defs>
+    <style>
+      :root{
+        --dc-ink:#0b1220;
+        --dc-accent:#16a34a;
+        --dc-red:#e11d48;
+        --dc-surface:#ffffff;
+        --dc-muted:rgba(11,18,32,.10);
+      }
+    </style>
+    <path id="spade" d="M12 2C8 7 2.2 10 2.2 15c0 3.6 2.8 6.5 6.4 6.5 1.4 0 2.7-.4 3.4-1.1-.5 1.8-1.7 4-3.2 5.6h6.4c-1.5-1.6-2.7-3.8-3.2-5.6.7.7 2 .1 3.4 1.1 3.6 0 6.4-2.9 6.4-6.5 0-5-5.8-8-9.8-13z"></path>
+    <path id="heart" d="M12 23s-9.8-5.6-9.8-12.1C2.2 7.6 4.8 5 8 5c2 0 3.6 1 4 1.6.4-.6 2-1.6 4-1.6 3.2 0 5.8 2.6 5.8 5.9C21.8 17.4 12 23 12 23z"></path>
+  </defs>
+
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="var(--dc-muted)"></rect>
+
+  <!-- back card -->
+  <g transform="translate(16 10) rotate(-10 16 22)">
+    <rect x="10" y="6" width="26" height="36" rx="7" fill="var(--dc-surface)" stroke="var(--dc-ink)" stroke-width="2"></rect>
+    <path d="M15 16h16M15 22h16M15 28h16M15 34h16" stroke="rgba(11,18,32,.14)" stroke-width="2" stroke-linecap="round"></path>
+    <text x="14" y="16" font-size="8.5" font-weight="800" fill="var(--dc-red)" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial">10</text>
+  </g>
+
+  <!-- front card -->
+  <g transform="translate(14 14)">
+    <rect x="12" y="8" width="28" height="40" rx="8" fill="var(--dc-surface)" stroke="var(--dc-ink)" stroke-width="2.2"></rect>
+    <text x="16" y="20" font-size="10" font-weight="900" fill="var(--dc-ink)" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial">A</text>
+
+    <g transform="translate(26 30) scale(0.65)">
+      <use href="#spade" x="-12" y="-14" width="24" height="28" fill="var(--dc-ink)"></use>
+    </g>
+
+    <path d="M22 38 L26 42 L30 38" fill="none" stroke="var(--dc-accent)" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"></path>
+  </g>
+
+  <!-- tiny heart dot cue -->
+  <g transform="translate(44 18) scale(0.28)">
+    <use href="#heart" x="0" y="0" width="24" height="24" fill="var(--dc-red)"></use>
+  </g>
+</svg>

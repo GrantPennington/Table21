@@ -12,6 +12,9 @@ model Player {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Identity (optional, for future display names)
+  displayName String?
+
   // Current state
   bankrollCents Int @default(100000)
 
@@ -25,6 +28,9 @@ model Player {
   handHistory HandHistory[]
 
   @@index([createdAt])
+  @@index([biggestWin(sort: Desc)])
+  @@index([handsPlayed(sort: Desc)])
+  @@index([totalWagered(sort: Desc)])
 }
 
 model HandHistory {

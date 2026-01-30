@@ -4,10 +4,10 @@ import { useBlackjackStore } from '@/store/blackjackStore';
 import Link from 'next/link';
 
 export function GameOverModal() {
-  const { bankrollCents, roundState, roundLoading, resetGame } = useBlackjackStore();
+  const { bankrollCents, roundState, roundLoading, identityLoading, playerId, resetGame } = useBlackjackStore();
 
-  // Only show when bankroll is zero and no active round
-  const isGameOver = bankrollCents === 0 && !roundState;
+  // Only show when bankroll is zero, no active round, AND identity has loaded
+  const isGameOver = bankrollCents === 0 && !roundState && !identityLoading && playerId !== null;
 
   if (!isGameOver) return null;
 

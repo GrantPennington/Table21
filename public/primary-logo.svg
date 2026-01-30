@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="220" viewBox="0 0 860 220" role="img" aria-label="DOWNCARD logo">
+  <defs>
+    <style>
+      :root{
+        --dc-ink: #0b1220;              /* text + strokes */
+        --dc-accent: #16a34a;           /* green accent */
+        --dc-red: #e11d48;              /* heart accent */
+        --dc-surface: #ffffff;          /* card face */
+        --dc-muted: rgba(11,18,32,.10); /* badge */
+      }
+      .ink{ fill: var(--dc-ink); }
+      .stroke{ stroke: var(--dc-ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+      .muted{ fill: var(--dc-muted); }
+      .surface{ fill: var(--dc-surface); }
+      .word{ font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji"; }
+    </style>
+
+    <!-- Simple suit shapes (font-independent) -->
+    <path id="spade" d="M12 2C8 7 2.2 10 2.2 15c0 3.6 2.8 6.5 6.4 6.5 1.4 0 2.7-.4 3.4-1.1-.5 1.8-1.7 4-3.2 5.6h6.4c-1.5-1.6-2.7-3.8-3.2-5.6.7.7 2 .1 3.4 1.1 3.6 0 6.4-2.9 6.4-6.5 0-5-5.8-8-9.8-13z"></path>
+    <path id="heart" d="M12 23s-9.8-5.6-9.8-12.1C2.2 7.6 4.8 5 8 5c2 0 3.6 1 4 1.6.4-.6 2-1.6 4-1.6 3.2 0 5.8 2.6 5.8 5.9C21.8 17.4 12 23 12 23z"></path>
+  </defs>
+
+  <!-- Icon -->
+  <g transform="translate(36 30)">
+    <!-- soft badge -->
+    <rect x="0" y="0" width="160" height="160" rx="28" class="muted"></rect>
+
+    <!-- back/down card (10♥) -->
+    <g transform="translate(42 22) rotate(-8 54 74)">
+      <rect x="0" y="0" width="92" height="120" rx="16" class="surface"></rect>
+      <rect x="0" y="0" width="92" height="120" rx="16" fill="none" class="stroke" opacity="0.95"></rect>
+      <!-- subtle back pattern (downcard vibe) -->
+      <path d="M14 26h64M14 44h64M14 62h64M14 80h64M14 98h64" stroke="rgba(11,18,32,.12)" stroke-width="3" stroke-linecap="round"></path>
+      <!-- corner rank -->
+      <text x="14" y="22" class="word" font-size="18" font-weight="800" fill="var(--dc-red)">10</text>
+      <!-- tiny heart pip -->
+      <use href="#heart" x="10" y="20" width="10" height="10" fill="var(--dc-red)" transform="scale(0.55) translate(15 22)"></use>
+    </g>
+
+    <!-- front/up card (A♠) -->
+    <g transform="translate(44 30)">
+      <rect x="0" y="0" width="92" height="120" rx="16" class="surface"></rect>
+      <rect x="0" y="0" width="92" height="120" rx="16" fill="none" class="stroke"></rect>
+      <!-- corner rank -->
+      <text x="14" y="26" class="word" font-size="20" font-weight="900" fill="var(--dc-ink)">A</text>
+      <!-- center spade -->
+      <g transform="translate(46 60) scale(1.35)">
+        <use href="#spade" x="-12" y="-16" width="24" height="28" fill="var(--dc-ink)"></use>
+      </g>
+
+      <!-- tiny "down" chevron at bottom (brand cue) -->
+      <path d="M34 92 L46 104 L58 92" fill="none" stroke="var(--dc-accent)" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round"></path>
+    </g>
+  </g>
+
+  <!-- Wordmark -->
+  <g transform="translate(240 60)">
+    <text x="0" y="86" class="word ink" font-size="78" font-weight="800" letter-spacing="-1.2">
+      DOWN<tspan fill="var(--dc-accent)">CARD</tspan>
+    </text>
+
+    <!-- small suit mark next to word (subtle blackjack cue) -->
+    <g transform="translate(402 26) scale(0.65)">
+      <use href="#spade" x="0" y="0" width="24" height="28" fill="var(--dc-ink)"></use>
+      <use href="#heart" x="26" y="-2" width="24" height="24" fill="var(--dc-red)"></use>
+    </g>
+
+    <!-- underline accent -->
+    <rect x="2" y="110" width="460" height="10" rx="5" class="muted"></rect>
+    <rect x="2" y="110" width="160" height="10" rx="5" fill="var(--dc-accent)" opacity="0.95"></rect>
+  </g>
+</svg>

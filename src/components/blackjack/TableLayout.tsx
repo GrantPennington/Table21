@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useBlackjackStore } from '@/store/blackjackStore';
 import { DealerHand } from './DealerHand';
@@ -21,14 +22,14 @@ export function TableLayout() {
         {/* Top Bar - Home + Bankroll + Hotkeys */}
         <div className="flex justify-between items-center mb-3 lg:mb-4 px-3 py-2 lg:px-6 lg:py-4 bg-gray-900/80 rounded-lg">
           <div className="flex items-center gap-3 lg:gap-4">
-            <Link
-              href="/"
-              className="flex items-center gap-1.5 px-2.5 py-1.5 lg:px-3 lg:py-2 bg-gray-700 hover:bg-gray-600 text-gray-200 hover:text-white rounded-md transition-colors text-sm lg:text-base"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-              </svg>
-              Home
+            <Link href="/" className="flex-shrink-0 hover:opacity-80 transition-opacity">
+              <Image
+                src="/icon-logo.svg"
+                alt="Downcard"
+                width={40}
+                height={40}
+                className="w-8 h-8 lg:w-10 lg:h-10"
+              />
             </Link>
             <button
               onClick={() => setShowResetModal(true)}

@@ -326,9 +326,11 @@ All shortcuts only work when the action is legal and no request is in progress.
 - Hand history (last 50 hands per player)
 - Graceful fallback when database is not configured
 
-### Phase F - Leaderboards
-- Leaderboard entries
-- Recompute job
+### Phase F ✅ - Leaderboards
+- Leaderboard page at `/leaderboard`
+- Categories: Biggest Win, Most Hands, Win Rate, High Roller
+- Anonymous display ("Player #XXXX") with displayName field ready for future
+- Real-time data from database
 
 ---
 
