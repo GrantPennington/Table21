@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
 
 type LeaderboardEntry = {
   rank: number;
@@ -98,7 +99,7 @@ export default function LeaderboardPage() {
         {/* Leaderboard Table */}
         <div className="bg-gray-800 rounded-xl overflow-hidden">
           {loading ? (
-            <div className="p-8 text-center text-gray-400">Loading...</div>
+            <LoadingSpinner text="Loading leaderboard..." />
           ) : error ? (
             <div className="p-8 text-center text-red-400">{error}</div>
           ) : entries.length === 0 ? (

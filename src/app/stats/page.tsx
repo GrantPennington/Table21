@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { LoadingSpinner } from '@/components/LoadingSpinner';
 
 type Stats = {
   bankrollCents: number;
@@ -88,7 +89,7 @@ export default function StatsPage() {
         </div>
 
         {loading ? (
-          <div className="text-center text-gray-400 py-12">Loading...</div>
+          <LoadingSpinner text="Loading stats..." />
         ) : error ? (
           <div className="text-center text-red-400 py-12">{error}</div>
         ) : !stats ? (

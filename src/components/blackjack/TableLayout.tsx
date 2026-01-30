@@ -11,6 +11,7 @@ import { ActionBar } from './ActionBar';
 import { ResultBanner } from './ResultBanner';
 import { GameOverModal } from './GameOverModal';
 import { ResetConfirmModal } from './ResetConfirmModal';
+import { LoadingOverlay } from './LoadingOverlay';
 
 export function TableLayout() {
   const { roundState, error, bankrollCents, clearError } = useBlackjackStore();
@@ -121,6 +122,9 @@ export function TableLayout() {
         isOpen={showResetModal}
         onClose={() => setShowResetModal(false)}
       />
+
+      {/* Loading Overlay */}
+      <LoadingOverlay />
     </div>
   );
 }
