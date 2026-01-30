@@ -25,12 +25,31 @@ model Player {
   biggestWin   Int @default(0) // in cents
 
   // Relations
-  handHistory HandHistory[]
+  handHistory  HandHistory[]
+  gameSessions GameSession[]
 
   @@index([createdAt])
   @@index([biggestWin(sort: Desc)])
   @@index([handsPlayed(sort: Desc)])
   @@index([totalWagered(sort: Desc)])
+}
+
+model GameSession {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Player relation
+  playerId String
+  player   Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  // Game state (stored as JSON)
+  shoe       String // JSON array of cards in the shoe
+  roundState String? // JSON of current round state (null if no active round)
+  rules      String // JSON of game rules
+
+  @@index([playerId])
+  @@index([updatedAt])
 }
 
 model HandHistory {
